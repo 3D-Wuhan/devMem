@@ -1,10 +1,62 @@
-# Class Template: EmptyCore
+ï»¿# Class Template: EmptyCore
 
 The most interesting class template in vcglib should be EmptyCore. In fact, there 
 are four such class templates, lying in vcglib/vcg/simplex/vertex/component.h, 
 vcglib/vcg/simplex/face/component.h, vcglib/vcg/simplex/edge/component.h and 
 vcglib/vcg/simplex/tetrahedron/component.h.
 
-EmptyCore Ö®ËùÒÔ¾«²Ê£¬ÊÇÒòÎª¿ÉÒÔÍ¨¹ıÄ£°åÀà EmptyCore ¸ø²»Í¬ÀàÔö¼ÓÏàÍ¬µÄ section Íê³ÉÀàËÆµÄ 
-aspect¡£EmptyCore µÄÄ£°å²ÎÊıÊÇÆä¸¸Àà£¬µ±¸¸Àà¼´Ä£°å²ÎÊı²»Í¬Ê±¾Í¸ø²»Í¬µÄÀàÔö¼ÓÁËÏàÍ¬µÄ 
-section(½ØÃæ)£¬¶ø EmptyCore ÊµÏÖµÄÆäÊµ¾ÍÊÇ½ØÃæµÄ¹¦ÄÜ¡£
+EmptyCore ä¹‹æ‰€ä»¥ç²¾å½©ï¼Œæ˜¯å› ä¸ºå¯ä»¥é€šè¿‡æ¨¡æ¿ç±» EmptyCore ç»™ä¸åŒç±»å¢åŠ ç›¸åŒçš„ section å®Œæˆç±»ä¼¼çš„ 
+aspectã€‚EmptyCore çš„æ¨¡æ¿å‚æ•°æ˜¯å…¶çˆ¶ç±»ï¼Œå½“çˆ¶ç±»å³æ¨¡æ¿å‚æ•°ä¸åŒæ—¶å°±ç»™ä¸åŒçš„ç±»å¢åŠ äº†ç›¸åŒçš„ 
+section(æˆªé¢)ï¼Œè€Œ EmptyCore å®ç°çš„å…¶å®å°±æ˜¯æˆªé¢çš„åŠŸèƒ½ã€‚
+
+## 1 COORD
+
+Templated on the coordinate class. In practice you use one of the two specialized 
+class Coord3f and Coord3d.
+You can access to the coordinate of a vertex by mean of the P( ), cP( ) member 
+functions.
+
+```cpp
+template <class A, class T> class Coord: public T 
+{
+public:
+    typedef A CoordType;
+    typedef typename A::ScalarType      ScalarType;
+    /// Return a const reference to the coordinate of the vertex
+    inline const CoordType &P() const { return _coord; }
+    /// Return a reference to the coordinate of the vertex
+    inline       CoordType &P()       { return _coord; }
+    /// Return a const reference to the coordinate of the vertex
+    inline       CoordType cP() const { return _coord; }
+
+    template < class RightValueType>
+    void    ImportData(const RightValueType  & rVert ) { if(rVert.IsCoordEnabled()) P().Import(rVert.cP()); T::ImportData( rVert); }
+    static bool HasCoord()   { return true; }
+    static void Name(std::vector<std::string> & name){name.push_back(std::string("Coord"));T::Name(name);}
+
+private:
+  CoordType _coord;
+};
+
+/// Specialized Coord Component in floating point precision.
+template <class T> class Coord3f: public Coord<vcg::Point3f, T> 
+{
+public:
+    static void Name(std::vector<std::string> & name)
+    {
+        name.push_back(std::string("Coord3f"));
+        T::Name(name);
+    }
+};
+```
+
+ç½‘ä¸Šè¯´ç±»æ¨¡æ¿çš„é™æ€æˆå‘˜å‡½æ•°ä¸èƒ½é‡å†™ï¼Œä½†ä¸Šé¢ Coord3f å¯¹ Coord çš„é™æ€æˆå‘˜å‡½æ•° Name ( ... )
+è¿›è¡Œäº†é‡å†™ï¼Œä¼¼ä¹ä¹Ÿæ²¡æœ‰é—®é¢˜ã€‚å°†æ¥æœ‰æœºä¼šå†™ä»£ç éªŒè¯ä¸€ä¸‹åˆ°åº•æƒ…å†µå¦‚ä½•ã€‚å‚è§
+<https://stackoverflow.com/questions/34222703/how-to-override-static-method-of-template-class-in-derived-class>
+
+<https://blog.csdn.net/chen134225/article/details/81188476>
+
+
+
+
+
