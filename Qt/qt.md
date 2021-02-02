@@ -64,12 +64,13 @@ QPixmap pixmap(...);
 brush.setPixma( pixmap );
 ```
 
-## 2. paintEvent
+## 2 paintEvent
 
 [QT关键问题解决之paintEvent理解](https://blog.csdn.net/u012151242/article/details/78947024)
 
 --------------
 
+## 3 [QSplitter](QSplitter.md)
 
 ## 4 Change Solution's Qt Version
 
