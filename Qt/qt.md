@@ -109,7 +109,7 @@ is available from instance(). Events can be sent with sendEvent() or posted to a
 event queue with postEvent(). Pending events can be removed with removePostedEvents() 
 or dispatched with sendPostedEvents().
 
-
+## 6 [Qt Resource Editor](resourceEditor.md)
 
 
 

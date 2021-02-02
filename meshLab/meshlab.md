@@ -16,13 +16,15 @@ see <https://blog.csdn.net/juebai123/article/details/78740186>
 ---
 
 
-
 ## 1 Does Meshlab Support Multi-thread?
 
 由于 openGL 本质上不是线程安全的，MeshLab 进行界面显示的关键类 GLArea 又继承自 QGLWidget 
 这个 openGL 支持窗口，因此 MeshLab 本质上不支持多线程。但由于采取了 processEvent，某些
 界面元素类似多线程支持，例如进度条的支持。
 
+当然 QtThreadSafeGLMeshAttributesMultiViewerBOManager 做了简单的多线程支持封装，
+例如对 draw ( .. ) 加了 QReadLocker locker(&_lock)，但真要在你的项目中使用多线程架构并
+使用 MeshLab 的三维处理代码，还得多多小心可能出现的坑。
 
 ## 2 [class GLArea](GLArea/GLArea.md)
 这个是 MeshLab 最关键的界面绘制封装类
