@@ -3,7 +3,7 @@
 我们都知道三维数据最重要的是定义好顶点 vertex 和网格 mesh，为了避免使用虚基类及产生歧义，
 vcglib 在定义 vertex 等重要数据结构时，几乎都采用了非常抽象且非常长的派生链（derivation 
 chain）技术来进行。其所采用的方法非常值得初学者学习，最好参照学习 
-[virtual base class](cpp/virtualClass.md)。
+[virtual base class](../../cpp/virtualClass.md)。
 
 ## 1 VertexArityMax
 
