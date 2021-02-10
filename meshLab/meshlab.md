@@ -33,3 +33,5 @@ see <https://blog.csdn.net/juebai123/article/details/78740186>
 
 In this section we analyze how meshlab call into functions in vcglib.
 
+MeshLab 的许多关键数据结构使用的是 vcglib 中所定义的数据结构，例如 TriMesh 就是在 
+vcglib 中被定义的，因此要熟悉 MeshLab 的关键数据结构首先要熟悉 vcglib 的数据结构。

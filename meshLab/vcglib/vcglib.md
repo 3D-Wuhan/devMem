@@ -10,7 +10,7 @@
 
 ## 5 [vcglib 的 openGL 封装](wrapGL/wrapGL.md)
 
-
+## 6 [TriMesh 的关键数据成员 vert](vertTriMesh.md)
 
 
 

@@ -29,7 +29,7 @@ file mainwindow_RunTime_2.cpp.
 
 定义分区链表，将每个顶点的指针记录在分区链表中。
 如果采用 vector< > 容器则要注意内存占用，相关分析文章见
-[多维 vector 内存占用问题分析](../meshLab/vcglib/cpp/vector.md)。
+[多维 vector 内存占用问题分析](../cpp/vector.md)。
 
 以前采用的是 map<DINDEX, LPPROJ_POINT> mapEllipsoidProj 来保存搜索的结果，
 效率低处理速度慢，下面改为 vector 内嵌数组的方式。
@@ -49,6 +49,46 @@ file mainwindow_RunTime_2.cpp.
 
 由于分区都比较小，我们将其称为 PATCH，
 定义的位置在 MeshLab/src/common/ml_mesh_type.h 中 ln159。
+
+#### 1.2.1 最先尝试的是平衡二叉树来搜索顶点并分类但效果很差
+
+最开始我们使用的是平衡二叉树来对点云顶点进行分区，
+二叉树的类模板参见：binarySearchTree.hpp。
+使用的过程参见：mainwindow_RumTime_1.cpp 中的 MainWindow::docSphericalProject ( )，
+那个 avlTree 即是平衡二叉树。结果效果很差，具体原因未详细探究，怀疑原因是由于顶点数太大，
+导致二叉树太大，内存消耗太多致使算法缓慢。（具体原因未知，只试了试 debug 版本，
+没准 release 版本没有问题）。
+
+由于该算法是整个项目的基础算法，无论 release 还是 debug 都要经常被调用，
+因此我们决定重新思考顶点搜索问题，花了大量时间重写这个部分。
+希望未来效果能得到较大提升。
+
+### 1.3 顶点的 PATCH 分类不适宜采用优先级队列
+
+由于每一层点云数据我们都去掉了头后部顶点，而且还有 margin，
+采用优先级队列无法处理好一部分被去掉的顶点。因此我们设计了一个分层 PATCH 聚合算法。
+算法的基本思想是先判断属于哪一 PATCH 层，再在每一层判断属于哪个 PATCH。
+每个 PATCH 中都有一个 vector 记录属于它的顶点。
+
+**增加类CMgrPatches用于对PATCH的管理。**
+
+#### 1.3.1 CMgrPatches
+
+输入：头面部点云（去掉无需处理的部分）。
+
+输出：椭球投影结果（由于最后的结果不含口鼻窗口部分，需考虑定义恰当的数据结构保存输出）。
+
+由于我们无需象二叉树那样对全部顶点进行排序，只需确定每个顶点属于哪个分区，
+然后对分区进行排序即可。为了更好地简化算法，我们下面将定义分区行 CPatchRow 和分区
+CPatch。我们将先对分区行进行排序，再对每个分区行中的分区进行排序。
+
+#### 1.3.2 CPatchesRow
+
+Patch 行管理，将输入的点云分派到恰当的 patch 行。
+
+#### 1.3.3 CPatch
+
+每个 patch 中含有若干点云顶点数据，用于分区投影。
 
 ## 2 The training procedure
 
