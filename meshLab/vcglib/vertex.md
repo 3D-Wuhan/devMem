@@ -1,5 +1,9 @@
 ﻿# Derivation chain to define class Vertex
 
+建议阅读 [TriMesh 的关键数据成员 vert](vertTriMesh.md)
+
+*********
+
 我们都知道三维数据最重要的是定义好顶点 vertex 和网格 mesh，为了避免使用虚基类及产生歧义，
 vcglib 在定义 vertex 等重要数据结构时，几乎都采用了非常抽象且非常长的派生链（derivation 
 chain）技术来进行。其所采用的方法非常值得初学者学习，最好参照学习 
@@ -19,7 +23,7 @@ In other words we cannot derive and add in a single derivation step
 we have to build the type a step a time (deriving from a single ancestor at a time).
 也就是说不能用多重继承，这即是所谓 **单参数派生链**。 
 
- The Real Big Vertex class;
+The Real Big Vertex class;
 
 The class __VertexArityMax__ is the one that is the Last to be derived,
 and therefore is the only one to know the real members 

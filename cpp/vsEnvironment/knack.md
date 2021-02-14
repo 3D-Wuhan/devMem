@@ -4,6 +4,8 @@
 
 [Synchronize Visual Studio settings across multiple computers](https://docs.microsoft.com/en-us/visualstudio/ide/synchronized-settings-in-visual-studio?view=vs-2019)
 
+[How do I REALLY reset the Visual Studio window layout?](https://stackoverflow.com/questions/26863/how-do-i-really-reset-the-visual-studio-window-layout)
+
 ----------------------
 
 ## 1 devenv

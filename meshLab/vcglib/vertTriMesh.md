@@ -1,5 +1,8 @@
 # TriMesh 的关键数据成员 vert
 
+建议阅读 [Derivation chain to define class Vertex](vertex.md)
+
+*************************
 
 ## 1 TriMesh\:\:vert 是 std\:\:vector<...>
 
@@ -22,6 +25,7 @@ struct BaseMeshTypeHolder{
 
 	typedef CONTV						VertContainer;
 ```
+**整个解决方案中BaseMeshTypeHolder只在定义TriMesh时作为模板参数被使用。**
 
 由此可知 VertContainer 其实就是 std\:\:vector\< typename TYPESPOOL::VertexType \>。
 
@@ -48,6 +52,27 @@ public:
 
 };
 ```
+从中我们可以看到 BaseMeshTypeHolder\<typename Container0\:\:value_type\:\:TypesPool\> 
+使用的模板参数为 TriMesh 的第一个模板参数 class Container0 = DummyContainer。
+而 MArity5 的第一个模板参数其实就是整个双模板参数派生链（chain with 2 template 
+arguments on the derivers）的基类第一个模板参数 A\< Base, TA \>，这个可以从 
+vcglib\vcg\container\derivation_chain.h 的 ln138 开始跟踪得出结论。
+仔细观察这个双参数派生链，第 3 个模板参数是含两个参数的类模板，它是这个派生链的基类。
+而第 1 个模板参数是基类（第 3 个模板参数）的第一个模板参数。
+**整个双参数派生链的每一个基类其实都是含两个参数的类模板**，
+总以最后一个参数为基类（基类是双参数类模板），然后前面的其它参数递归形成基类的双参数。
 
-
+在定义 CMeshO 时在作为类模板的 TriMesh 中使用的模板参数 Container0 为 
+vcg\:\:vertex\:\:vector_ocf\<CVertexO\>，此时
+```cpp
+BaseMeshTypeHolder<typename Container0::value_type::TypesPool>
+```
+为
+```cpp
+BaseMeshTypeHolder<vector_ocf<CVertexO>::value_type::TypesPool>
+```
+亦即
+```cpp
+BaseMeshTypeHolder<CVertexO::TypesPool>
+```
 
