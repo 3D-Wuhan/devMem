@@ -2,7 +2,7 @@
 
 类 CVertexO 使用 vcglib 中的类模板 Vertex 来定义。
 
-## 1 CVertexO::TypesPool
+## 1 CVertexO\:\:TypesPool 其实就是 CUsedTypesO
 
 先来回顾一下 vcglib 对类模板 Vertex 的定义（vcglib/vcg/simplex/vertex/base.h 的 ln183）：
 ```cpp
@@ -21,7 +21,8 @@ typedef UserTypes               TypesPool;
 };
 ```
 可以看到第一个模板参数 UserTypes 被重新定义为 TypesPool，也就是说作为类模板 Vertex 
-的模板类的子类的 CVertexO，其 TypesPool 其实就是第一个模板参数。
+的模板类的子类的 CVertexO，其 TypesPool 其实就是第一个模板参数，
+对于 CVertexO 来说这个 TypesPool 就是 CUsedTypesO。
 
 再来看 CVertexO 的定义（MeshLab/src/common/ml_mesh_type.h 中 ln94）：
 ```cpp
@@ -108,10 +109,38 @@ structure template, which can be considered as a "typeholder" since it does
 only define VertexType to be the type of template argument of the structure 
 template vcg\:\:use.
 
+### 2.2 Expand the definition of CUsedTypesO
 
-CUsedTypesO 的定义位于 MeshLab/src/common/ml_mesh_type.h 中 ln85：
+注意到 vcg::Use 中不含 AsPatchType，我们不好直接修改 vcglib 的原始文件，
+那样会影响将来对 vcglib 版本升级后的支持。因此采用定义其模板子结构 UseO 来增加相应的 
+AsPatchType。具体的定义方式参见 ml_mesh_type.h 中 ln86 to ln 97：
+```cpp
+template <class A>
+struct UseO : public vcg::Use<A>
+{
+	template <class T> struct AsPatchType : public T
+	{
+		typedef A	PatchType;
+		typedef PatchType * PatchPointer;
+	};
+};
+```
+
+原始的 CUsedTypesO 的定义如下：
 ```cpp
 class CUsedTypesO: public vcg::UsedTypes < vcg::Use<CVertexO>::AsVertexType,
     vcg::Use<CEdgeO>::AsEdgeType,
     vcg::Use<CFaceO>::AsFaceType >{};
 ```
+
+修改后的 CUsedTypesO 定义位于 MeshLab/src/common/ml_mesh_type.h 中 ln103：
+```cpp
+class CUsedTypesO : public vcg::UsedTypes < UseO<CVertexO>::AsVertexType,
+	UseO<CEdgeO>::AsEdgeType,
+	UseO<CFaceO>::AsFaceType,
+	UseO<CPatchO>::AsPatchType> {};
+```
+
+经过上述步骤我们将 CPatchO 的类型加入到 CUsedTypesO 中了，方便后续使用。
+
+

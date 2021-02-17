@@ -103,6 +103,25 @@ Color4b
 Qualitys, Qualityf, Qualityd
 VFAdj                             // topology (vertex->face adjacency)
 ```
+
+### 2.1 Definition and TypesPool
+
+```cpp
+template <class UserTypes,
+        template <typename> class A = DefaultDeriver, template <typename> class B = DefaultDeriver,
+        template <typename> class C = DefaultDeriver, template <typename> class D = DefaultDeriver,
+        template <typename> class E = DefaultDeriver, template <typename> class F = DefaultDeriver,
+        template <typename> class G = DefaultDeriver, template <typename> class H = DefaultDeriver,
+        template <typename> class I = DefaultDeriver, template <typename> class J = DefaultDeriver,
+        template <typename> class K = DefaultDeriver, template <typename> class L = DefaultDeriver>
+class Vertex: public VertexArityMax<UserTypes, A, B, C, D, E, F, G, H, I, J, K, L>
+{
+public:
+typedef AllTypes::AVertexType   IAm;
+typedef UserTypes               TypesPool;
+};
+```
+
 adjacency [ə'dʒeɪsənsɪ]
 
 
