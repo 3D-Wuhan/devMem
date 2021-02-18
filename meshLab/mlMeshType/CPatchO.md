@@ -13,9 +13,15 @@
 * 修改 CUsedTypesO 增加对类型 CPatchO 的管理
 
 步骤：
-* 为 patch 增加 EmptyCore
-* 
+* 为 patch 增加 EmptyCore 及颜色等其它模块，jicheng/patch/component.h
+* 增加 PatchTypeHolder，ln37 of jicheng/patch/based.h
+* 定义 PatchBase，ln45 of jicheng/patch/based.h
+* 定义类模板 PatchArityMax 作为最终派生类，ln61 of jicheng/patch/based.h
+* 由 PatchArityMax 派生类模板 Patch，ln239 of jicheng/patch/based.h
+* 由类模板 Patch 派生模板类 CPatchO
 
-
+目前存在的问题：
+* 目前 jicheng/patch/component.h 中定义的模块太少，仅含 Flag 和 Color；
+* 需要处理 CPatchesRow
 
 
