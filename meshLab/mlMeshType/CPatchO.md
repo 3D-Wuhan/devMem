@@ -12,3 +12,10 @@
 * 在 CPatchO 中增加保存 VertexRef 的容器
 * 修改 CUsedTypesO 增加对类型 CPatchO 的管理
 
+步骤：
+* 为 patch 增加 EmptyCore
+* 
+
+
+
+

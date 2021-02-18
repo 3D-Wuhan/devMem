@@ -9,7 +9,7 @@ EmptyCore 之所以精彩，是因为可以通过模板类 EmptyCore 给不同�
 aspect。EmptyCore 的模板参数是其父类，当父类即模板参数不同时就给不同的类增加了相同的 
 section(截面)，而 EmptyCore 实现的其实就是截面的功能。
 
-## 1 COORD
+## 2 COORD
 
 Templated on the coordinate class. In practice you use one of the two specialized 
 class Coord3f and Coord3d.
