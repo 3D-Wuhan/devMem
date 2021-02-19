@@ -22,6 +22,6 @@
 
 目前存在的问题：
 * 目前 jicheng/patch/component.h 中定义的模块太少，仅含 Flag 和 Color；
-* 需要处理 CPatchesRow
+* CPatchO 中需要增加 vector_ocf\<CVertexO*\> 
 
 
