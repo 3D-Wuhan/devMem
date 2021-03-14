@@ -1,7 +1,22 @@
 # Codes Review of Meshlab
 
+[Meshlab源码初探](https://blog.csdn.net/qq_38906523/article/details/75210330)
 
--------------------------------------------------------
+[在meshLab的3D场景中绘制2D透明信息面板](https://www.cnblogs.com/kekec/archive/2011/06/28/2092623.html)
+
+[meshlab](https://blog.csdn.net/sx341125/category_6566097.html)
+
+[Qt实现读取显示obj文件——动态绑定纹理与消除纹理](https://blog.csdn.net/sx341125/article/details/68940860)
+
+[Qt实现读取显示obj文件——多线程加载纹理](https://blog.csdn.net/sx341125/article/details/68926600)
+
+[OpenGL多线程创建纹理，附加我的测试结果](https://www.cnblogs.com/mazhenyu/archive/2010/04/29/1724190.html)
+
+[]()
+
+
+*************************************************
+
 
 ## 0 Architecture of Meshlab
 
