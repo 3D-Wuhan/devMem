@@ -1,7 +1,24 @@
 # Qt Coding Tips
 
+<https://www.jianshu.com/p/304c9e6de4d2>
+
+********************************
+
 很少使用 Qt，由于 meshlab 使用了 Qt，只好花点时间熟悉一下。
 
+## 0. Qt 应用程序的部署问题
+
+Qt 应用程序的 Release 版本被编译好后，如果部署环境中未安装相应的动态链接库，
+点击运行后会出现如下错误：
+
+![error running without qt environment](pix/releaseErr.PNG)
+
+解决的办法是当前目录下运行 D:\Qt\Qt5.14.2\5.14.2\msvc2017_64\bin 中的 windeployqt.exe:
+```shell
+D:\Qt\Qt5.14.2\5.14.2\msvc2017_64\bin\windeployqt.exe 3dAI.exe
+```
+运行完成后，目标.exe同级目录中就会出现其依赖库了，
+相关的plugins和platform文件夹与动态库都会拷贝在该目录下。
 
 ## 1. QPainter
 

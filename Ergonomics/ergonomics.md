@@ -1,10 +1,25 @@
 # Ergonomics Evaluating System
 
+For 3D reconstruction, please refer to 
+[this repo](https://github.com/hjwdzh/Manifold.git).
+
+<span id="top">top</span>
+
+***************
+
 接续下来我们将焦点集中到数据训练的处理流程上，完成如下任务：
+* 生成分区 patches row
+* [可视化分区效果](visualDebug.md#showing-results-of-patches-rows)
 * 对导入的每个 mesh 计算投影；
 * 保存投影结果，形成评估投影库；
 * 对评估 mesh 进行计算投影并与投影库对比；
 * 动态显示对比结果，在界面上显示与标准数字头模进行逐一比对的动态效果。
+
+[jump to the bottom](#jump)
+
+[jump to the train mesh](#train-mesh)
+
+[jump to the batch train](#batch-train)
 
 ## 1 Ellipsoid projection calculating for each mesh
 
@@ -14,7 +29,43 @@ mainwindow_RunTime_1.cpp. A adapted version for batch training is
 MainWindow\:\:ellipsoidProject_single_file ( QString fileName ) in ln92 of the 
 file mainwindow_RunTime_2.cpp.
 
-### 1.1 优化 MainWindow\:\:ellipsoidProject_single_file ( QString fileName )
+在新版本中我们取消了类 CMgrPatches，改为直接在 MeshModel 中增加 doProjection ( ) 
+函数来进行投影计算。调用的位置位于 mainwindow_RunTime_2.cpp 的 ln225:
+```cpp
+	pMM->doProjection ( );
+```
+下面的处理方式已经被废除：
+> 在当前的版本中我们采用 CMgrPatches 来管理分片的投影。
+> ```cpp
+> CMgrPatches *	pMgr	= new CMgrPatches( );
+> ```
+>
+> 事实上，CMgrPatches 管理的是 [CPatchesRowO](../meshLab/mlMeshType/CPatchesRowO.md#class-cpatchesrowo)，
+> 后者则管理分片 [CPatchO](../meshLab/mlMeshType/CPatchO.md#class-cpatcho)。
+
+在 CMeshO 中增加了容器
+```cpp
+	PatchesRowContainer patches_rows;
+```
+
+每个分片的投影计算位于 meshmodel_1.cpp 的 ln65:
+```cpp
+void MeshModel::doProject (CPatchO *pPatch)
+```
+
+### 1.1 生成 patches_row
+
+theta 是与 z 轴(由 y 轴转换而来)的夹角, 范围为 [0, PI], cos_theta 从上到下由 1
+逐渐减少最后变成 -1。我们对 cos_theta 做上下截断, 使用 trunc_cosInterval.arr 采样取值。
+
+
+
+### 1.2 为每个 CPatchesRowO 添加数据成员
+
+phi 是顶点与 x 轴(由 z 轴转换而来)的夹角, 范围 [-PI, PI], 头面部前面部分对应的范
+围为 [-PI/2, PI/2. 此时 sin_phi 的变化范围为 [-1, 1]
+
+### 1.3 优化 MainWindow\:\:ellipsoidProject_single_file ( QString fileName )
 
 椭球面投影要解决定义球心及量化两个问题。
 
@@ -25,7 +76,7 @@ file mainwindow_RunTime_2.cpp.
 * 改善分区投影算法的顶点搜索问题
 * 采用多线程来实现算法
 
-### 1.2 顶点搜索问题
+### 1.4 顶点搜索问题
 
 定义分区链表，将每个顶点的指针记录在分区链表中。
 如果采用 vector< > 容器则要注意内存占用，相关分析文章见
@@ -50,7 +101,7 @@ file mainwindow_RunTime_2.cpp.
 由于分区都比较小，我们将其称为 PATCH，
 定义的位置在 MeshLab/src/common/ml_mesh_type.h 中 ln159。
 
-#### 1.2.1 最先尝试的是平衡二叉树来搜索顶点并分类但效果很差
+#### 1.4.1 最先尝试的是平衡二叉树来搜索顶点并分类但效果很差
 
 最开始我们使用的是平衡二叉树来对点云顶点进行分区，
 二叉树的类模板参见：binarySearchTree.hpp。
@@ -63,7 +114,7 @@ file mainwindow_RunTime_2.cpp.
 因此我们决定重新思考顶点搜索问题，花了大量时间重写这个部分。
 希望未来效果能得到较大提升。
 
-### 1.3 顶点的 PATCH 分类不适宜采用优先级队列
+### 1.5 顶点的 PATCH 分类不适宜采用优先级队列
 
 由于每一层点云数据我们都去掉了头后部顶点，而且还有 margin，
 采用优先级队列无法处理好一部分被去掉的顶点。因此我们设计了一个分层 PATCH 聚合算法。
@@ -72,7 +123,7 @@ file mainwindow_RunTime_2.cpp.
 
 **增加类CMgrPatches用于对PATCH的管理。**
 
-#### 1.3.1 CMgrPatches
+#### 1.5.1 CMgrPatches
 
 输入：头面部点云（去掉无需处理的部分）。
 
@@ -82,11 +133,11 @@ file mainwindow_RunTime_2.cpp.
 然后对分区进行排序即可。为了更好地简化算法，我们下面将定义分区行 CPatchRow 和分区
 CPatch。我们将先对分区行进行排序，再对每个分区行中的分区进行排序。
 
-#### 1.3.2 CPatchesRow
+#### 1.5.2 CPatchesRow
 
 Patch 行管理，将输入的点云分派到恰当的 patch 行。
 
-#### 1.3.3 CPatch
+#### 1.5.3 CPatch
 
 每个 patch 中含有若干点云顶点数据，用于分区投影。
 
@@ -123,9 +174,13 @@ emit	processingMesh ( m_listFiles[0] );
 进而由信号 processingMesh 的响应函数 trainMesh ( QString& ) 来处理对 
 m_listFiles[0] 的训练。
 
-### 2.2 train mesh
+# 2.2 train mesh
 
 经过测试我们发现 trainMesh ( QString& ) 无法很好地在界面进度条上显示总体进度，
 因此刚开始时我们决定将其改为 trainMesh ( int )。但经过 MainWindow 的数据成员
 m_iCurrent 可以用于处理进度条，因此最终我们没有修改 trainMesh 的定义。
 
+
+<span id="jump">Hello World</span>
+
+[jump to the top](#top)

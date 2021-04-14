@@ -3,8 +3,12 @@
 **关键结论：**
 * CMeshO 中存储顶点的关键数据成员 vert 的容器类型是 std\:\:vector< CVertexO >
 * CMeshO 中存储面的关键数据成员 face 的容器类型是 std\:\:vector< CFaceO >
-* 需要在 CMeshO 中增加存储 patch 的数据成员，其容器类型 jicheng\:\:patch\:\:vector_ocf\<CPatchO\>
-* 需要在 CPatchO 中增加储存 VertRef 的容器类型 
+* CMeshO 中存储分片行的关键数据成员 patches_row 的容器类型是 std\:\:vector< TYPESPOOL::PatchesRowType>
+* CMeshO 中增加了存储 patches_row 指针数组便于快速加入数据成员：PatchesRowPointer	rows[128];
+> * 需要在 CMeshO 中增加存储 patch 的数据成员，其容器类型 jicheng\:\:patch\:\:vector_ocf\<CPatchO\>
+> * 需要在 CPatchO 中增加储存 VertRef 的容器类型 
+
+
 
 类 CMeshO 的定义位于 MeshLab/src/common/ml_mesh_type.h 最后部分。
 由于需要增加对分块（patch）的支持，我们将对其进行适当的改写。

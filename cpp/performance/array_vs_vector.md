@@ -2,7 +2,7 @@
 
 [C++ Core Guidelines: std\:\:array and std\:\:vector are your Friends](https://www.modernescpp.com/index.php/c-core-guidelines-std-array-and-std-vector-are-your-friends)
 
-[关于拷贝常规数组、std::array和std::vector速度的一些测试](https://blog.csdn.net/qq_35976351/article/details/82940121)
+[关于拷贝常规数组、std\:\:array和std\:\:vector速度的一些测试](https://blog.csdn.net/qq_35976351/article/details/82940121)
 
 [c++数组和 vector访问执行性能比较](https://blog.csdn.net/h799710/article/details/107544792)
 

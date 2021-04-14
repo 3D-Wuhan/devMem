@@ -6,7 +6,15 @@
 
 [How do I REALLY reset the Visual Studio window layout?](https://stackoverflow.com/questions/26863/how-do-i-really-reset-the-visual-studio-window-layout)
 
+<https://docs.microsoft.com/zh-cn/cpp/build/building-on-the-command-line?view=msvc-160>
+
 ----------------------
+
+```shell
+cmake .
+
+msbuild .\hello_world.sln
+```
 
 ## 1 devenv
 
