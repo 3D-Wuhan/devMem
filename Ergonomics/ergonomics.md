@@ -166,7 +166,7 @@ ln215 in mainwindow_Init.cpp
 	trainAct->setShortcut ( Qt::CTRL + Qt::Key_T );
 	connect ( trainAct, SIGNAL ( triggered ( ) ), this, SLOT ( batchTrain ( ) ) );
 ```
-The corresponding slot function is in ln875 of mainwindow_RunTime_2.cpp.
+The corresponding slot function is in ln938 of mainwindow_RunTime_2.cpp.
 该函数主要获取路径链表 m_listFiles，然后发出 
 ```cpp
 emit	processingMesh ( m_listFiles[0] );
@@ -174,12 +174,42 @@ emit	processingMesh ( m_listFiles[0] );
 进而由信号 processingMesh 的响应函数 trainMesh ( QString& ) 来处理对 
 m_listFiles[0] 的训练。
 
-# 2.2 train mesh
+### 2.2 train mesh
 
 经过测试我们发现 trainMesh ( QString& ) 无法很好地在界面进度条上显示总体进度，
 因此刚开始时我们决定将其改为 trainMesh ( int )。但经过 MainWindow 的数据成员
 m_iCurrent 可以用于处理进度条，因此最终我们没有修改 trainMesh 的定义。
 
+
+### 2.3 Storage of the projection results
+
+* 应用目录下建立存储目录，存储已经完成训练的目录清单
+    * 选定训练目录后将该目录添加到存储清单 ( see ln974 of mainwindow_RunTime_2.cpp )
+* 数据目录下建立本目录的两个文件：
+	* proj_results.mat 中存储数据结果
+    * proj_list.txt 中存储已经被成功计算的文件清单
+
+### 2.4 Synthesis
+
+ln463 of mainwindow_Runtime_3.cpp
+
+* 读入训练目录清单
+* 逐条根据训练记录读入投影记录
+* 形成综合评估记录
+
+* 读入标准数据
+* 组织标准数据（含点云数据）
+
+## 3. Evaluation
+
+* 计算投影数据
+* 对比评估数据
+* 对比标准数据
+* 与标准数据互动
+
+## 4. displaying evaluating results
+
+For messages displaying, please refer to [GLArea](../meshLab/GLArea/GLArea.md)
 
 <span id="jump">Hello World</span>
 
