@@ -12,7 +12,8 @@ For 3D reconstruction, please refer to
 * [可视化分区效果](visualDebug.md#showing-results-of-patches-rows)
 * 对导入的每个 mesh 计算投影；
 * 保存投影结果，形成评估投影库；
-* 对评估 mesh 进行计算投影并与投影库对比；
+* 对评估 mesh 计算投影并计算其与投影库的差值；
+* 使用颜色映射显示投影差值；
 * 动态显示对比结果，在界面上显示与标准数字头模进行逐一比对的动态效果。
 
 [jump to the bottom](#jump)
@@ -22,6 +23,12 @@ For 3D reconstruction, please refer to
 [jump to the batch train](#batch-train)
 
 ## 1 Ellipsoid projection calculating for each mesh
+
+**特别要注意：** 面罩设计方案的评估投影算法与头面部点云模型的特征投影算法**是不同的！**
+* 二者的投影中心不同
+* 评估投影没有边距设置
+
+[跳转到评估投影](#evaluating_projection)
 
 The original version of ellipsoid projection is implemented in 
 MainWindow\:\:docSphericalProject ( ) at the top of the file 
@@ -65,6 +72,7 @@ theta 是与 z 轴(由 y 轴转换而来)的夹角, 范围为 [0, PI], cos_theta 从上到下由 1
 phi 是顶点与 x 轴(由 z 轴转换而来)的夹角, 范围 [-PI, PI], 头面部前面部分对应的范
 围为 [-PI/2, PI/2. 此时 sin_phi 的变化范围为 [-1, 1]
 
+<span id="ellipsoid_projection"></span>
 ### 1.3 优化 MainWindow\:\:ellipsoidProject_single_file ( QString fileName )
 
 椭球面投影要解决定义球心及量化两个问题。
@@ -140,6 +148,17 @@ Patch 行管理，将输入的点云分派到恰当的 patch 行。
 #### 1.5.3 CPatch
 
 每个 patch 中含有若干点云顶点数据，用于分区投影。
+
+
+<span id="evaluating_projection"></span>
+### 1.6 评估投影 MainWindow\:\:ellipsoidProject_evaluating_file ( QString fileName )
+
+**务请注意评估投影与点云投影的差异！**
+
+[跳转到点云投影](#ellipsoid_projection)
+
+
+
 
 ## 2 The training procedure
 
